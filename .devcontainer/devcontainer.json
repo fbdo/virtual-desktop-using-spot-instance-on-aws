@@ -1,0 +1,17 @@
+{
+    "name": "AWS CDK Development",
+    "image": "mcr.microsoft.com/devcontainers/typescript-node:latest",
+    "features": {
+        "ghcr.io/devcontainers/features/docker-in-docker:2": {}
+    },
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "ms-vscode.vscode-typescript-tslint-plugin",
+                "amazonwebservices.aws-toolkit-vscode"
+            ]
+        }
+    },
+    "postCreateCommand": "npm install -g aws-cdk && npm install",
+    "remoteUser": "node"
+}
