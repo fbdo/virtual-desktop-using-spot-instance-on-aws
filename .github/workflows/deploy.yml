@@ -9,6 +9,9 @@ permissions:
   id-token: write  # Required for OIDC authentication
   contents: read
 
+env:
+  AWS_REGION: "eu-central-1"
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -21,7 +24,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v2
         with:
           role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/GitHubActionsOIDC
-          aws-region: us-east-1
+          aws-region: ${{ env.AWS_REGION }}
 
       - name: Verify IAM Role Permissions
         run: |
@@ -62,5 +65,9 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Bootstrap AWS CDK (if needed)
+        run: cdk bootstrap aws://${{ secrets.AWS_ACCOUNT_ID }}/${{ env.AWS_REGION }} || echo "CDK already bootstrapped"
+
+
       - name: Deploy CDK stack
-        run: cdk deploy --require-approval never
+        run: cdk deploy --require-approval never --region ${{ env.AWS_REGION }}
